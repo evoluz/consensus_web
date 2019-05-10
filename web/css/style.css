@@ -1,0 +1,11 @@
+.document_title{
+  margin:40px
+}
+.article{
+  padding: 20px 20px;
+}
+.article-title{
+  margin:10px 0px;
+  display: inline-block;
+  font-weight: bold;
+}

@@ -5,6 +5,8 @@ header('Access-Control-Allow-Methods: GET,POST,PUT,DELETE');
 header('Access-Control-Allow-Credentials: false');
 header('Access-Control-Max-Age: 86400');
 
+session_start();
+
 // JUNTAR GET Y POST en P
 $P = $_POST;
 $P = array_merge($_GET,$P);
@@ -55,21 +57,46 @@ switch($path[1]){
     /**
      * CLIENTES
      */
-    case "active_document":{
-        $active_id = 1; //db_qselect()
-        $sql_document = "SELECT * FROM documents WHERE id=".com($active_id);
-        $document = db_aqselect($sql_document);
-
-        $sql_articles = "SELECT * FROM articles WHERE document_id=".com($active_id)." ORDER BY arrange ASC, id ASC";
-        $articles = db_aselect($sql_articles);
-
-        $document["articles"] = $articles;
+    case "document":{
+        switch($path[2]){
+            case "active_document":{
+                $active_id = 1; //db_qselect()
+                $sql_document = "SELECT * FROM documents WHERE id=".com($active_id);
+                $document = db_aqselect($sql_document);
         
+                $sql_articles = "SELECT * FROM articles WHERE document_id=".com($active_id)." ORDER BY arrange ASC, id ASC";
+                $articles = db_aselect($sql_articles);
+        
+                $document["articles"] = $articles;
+                
+        
+                $response['data'] =  $document;
+                $response['message'] = "ok"; 
+                $response = $document;
+            }break;
+            case "vote":{
 
-        $response['data'] =  $document;
-        $response['message'] = "ok"; 
-        $response = $document;       
+            }break;
+        }
     }break;
+
+    case "user" : {
+        switch($path[2]){
+            case "login":{
+                $header = apache_request_headers();
+                print_r($header);
+                $sql = "SELECT * FROM users WHERE ncolegiado LIKE ".com($_POST["user"])." AND pass LIKE ".com(md5($_POST["pass"]));
+                $user = db_aqselect($sql);
+                if(is_array($user)){
+                    $sql_token = "UPDATE users SET token=".com($header["Uuid"])." WHERE id=".com($user["id"]);
+                    db_execute($sql_token);
+                }
+                unset($user["pass"]);
+                $response = $user;
+            }break;
+        }
+    }break;
+    
     case "clientes" : {
         switch($path[2]){
             case "add":{
