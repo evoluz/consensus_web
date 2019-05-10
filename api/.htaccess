@@ -1,0 +1,8 @@
+# ALLOW ONLY NECESSARY REQUEST METHODS
+# RewriteCond %{REQUEST_METHOD} !^(GET|POST|PUT|DELETE) [NC]
+# RewriteRule .* - [F,L]
+
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
