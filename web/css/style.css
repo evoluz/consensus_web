@@ -48,15 +48,27 @@
   background-color:red !important;
 }
 
-.votation .btn.active[id$="negative"] {
+.votation .btn.active[data-id$="negative"] {
   background-color: #dc3545 !important;
   border-color:#dc3545 !important;
 }
-.votation .btn.active[id$="positive"] {
+.votation .btn.active[data-id$="positive"] {
   background-color: #28a745 !important;
   border-color:#28a745 !important;
 }
-.sendvotebutton:hover{
+.sendvotebutton.active{
   background-color: #007bff !important;
   border-color:#007bff !important;
+}
+
+.propuestas-de-mejora .form-group{
+  padding-top:10px;
+  display: none;
+}
+
+img.shield {
+  display: none;
+  position: absolute;
+  width: 40px;
+  margin: 0 -50px;
 }

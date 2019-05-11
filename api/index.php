@@ -65,9 +65,7 @@ fclose($fp);
 
 
 switch($path[1]){
-    /**
-     * CLIENTES
-     */
+
     case "document":{
         //if($_SESSION["user_id"]>0)
         switch($path[2]){
@@ -81,6 +79,10 @@ switch($path[1]){
         
                 $document["articles"] = $articles;
                 
+                //$sql_article_ids = "SELECT id FROM articles WHERE document_id=".com($active_id);
+                //$sql_votes = "SELECT  FROM articles_validation WHERE article_id IN(".$sql_article_ids.")";
+                //db_array();
+                $articles = db_aselect($sql_articles);
         
                 $response['data'] =  $document;
                 $response['message'] = "ok"; 
@@ -117,6 +119,31 @@ switch($path[1]){
                 }break;
         }
     }break;
+    
+
+
+    case "article":{
+        switch($path[2]){
+            case "vote":{
+                if(!($_SESSION["user_id"]>0)) $_SESSION["user_id"] = db_qselect("SELECT id FROM users WHERE token LIKE ".com($info["uuid"]));
+                $_POST["user_id"] = $_SESSION["user_id"];
+                foreach($_POST as $k=>$v){
+                    if($v=="true")$_POST[$k]="1";
+                    if($v=="false")$_POST[$k]="0";
+                }
+
+                db_insert("articles_validation","id",$_POST);
+                $data = array("voted"=>"true");
+                $response['data'] = $data;
+                $response['message'] = "ok"; 
+                $response = $data;
+
+            }break;
+        }
+    }break;
+
+
+
 
     case "user" : {
         switch($path[2]){
