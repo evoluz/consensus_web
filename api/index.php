@@ -53,11 +53,23 @@ $info["_GET"] = $_GET;
 $info["_POST"] = $_POST;
 $info["_PUT"] = $_PUT;
 
+$header = apache_request_headers();
+
+$info["headers"] = $headers;
+
+/* LOG */
+$fp = fopen('log/'.date("Y-m-d_H.i.s").'_'.implode("_",$path).'.txt', 'w');
+fwrite($fp, print_r($info,true));
+fclose($fp);
+/* LOG */
+
+
 switch($path[1]){
     /**
      * CLIENTES
      */
     case "document":{
+        //if($_SESSION["user_id"]>0)
         switch($path[2]){
             case "active_document":{
                 $active_id = 1; //db_qselect()
@@ -75,7 +87,8 @@ switch($path[1]){
                 $response = $document;
             }break;
             case "vote":{
-
+                $_POST["user_id"] = $_SESSION["user_id"];
+                db_insert("documents_validation","id",$_POST);
             }break;
         }
     }break;
@@ -83,20 +96,20 @@ switch($path[1]){
     case "user" : {
         switch($path[2]){
             case "login":{
-                $header = apache_request_headers();
-                print_r($header);
+                //print_r($header);
                 $sql = "SELECT * FROM users WHERE ncolegiado LIKE ".com($_POST["user"])." AND pass LIKE ".com(md5($_POST["pass"]));
                 $user = db_aqselect($sql);
                 if(is_array($user)){
                     $sql_token = "UPDATE users SET token=".com($header["Uuid"])." WHERE id=".com($user["id"]);
                     db_execute($sql_token);
+                    $_SESSION["user_id"] = $user["id"];
                 }
                 unset($user["pass"]);
                 $response = $user;
             }break;
         }
     }break;
-    
+    /* 
     case "clientes" : {
         switch($path[2]){
             case "add":{
@@ -129,7 +142,7 @@ switch($path[1]){
             }
         }
     }break;
-
+ */
 }
 
 
@@ -152,6 +165,8 @@ switch($P["function"]){
 }
 
 //$response["info"] = $info;
+//$response["session"] = print_r($_SESSION);
+
 
 //@ob_end_clean();
 /***************************/

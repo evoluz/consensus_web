@@ -1,0 +1,28 @@
+Array
+(
+    [method] => POST
+    [uri] => Array
+        (
+            [0] => /api/user/login
+        )
+
+    [path] => Array
+        (
+            [0] => 
+            [1] => user
+            [2] => login
+        )
+
+    [_GET] => Array
+        (
+        )
+
+    [_POST] => Array
+        (
+            [user] => 12345678
+            [pass] => 1234
+        )
+
+    [_PUT] => 
+    [headers] => 
+)
